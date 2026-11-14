@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Racing-Bauta | Tu próxima puesta a punto</title>
+  <meta name="description" content="Explora el catálogo de Racing-Bauta. Encuentra productos disponibles, compara precios y consulta por tu modelo.">
+  <meta name="theme-color" content="#151517">
+  <link rel="icon" type="image/png" href="assets/logo-racing-bauta.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Racing-Bauta, inicio">
+      <img src="assets/logo-racing-bauta.png" alt="Racing-Bauta" width="180" height="88">
+      <span class="brand-tag">TIENDA ONLINE</span>
+    </a>
+    <a class="nav-catalog" href="#catalogo">Explorar catálogo <span aria-hidden="true">↗</span></a>
+    <div class="status" id="status">Conectando</div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> PASIÓN POR LAS DOS RUEDAS</p>
+        <h1 id="hero-title">Tu moto.<br>Tu estilo.<br><em>Tu próxima ruta.</em></h1>
+        <p class="hero-description">Encuentra lo que buscas para tu moto. Explora nuestros productos y consulta por el modelo que necesitas.</p>
+        <a class="primary-button" href="#catalogo">Ver productos <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="hero-art">
+        <span class="art-caption">RACING-BAUTA / MOTO STORE</span>
+        <img src="assets/logo-racing-bauta.png" alt="" width="1800" height="880">
+        <span class="art-bottom">LA PASIÓN NOS MUEVE <span aria-hidden="true">↗</span></span>
+      </div>
+    </section>
+    <div class="benefits" aria-label="Cómo comprar">
+      <div><span class="benefit-number">01</span><span><strong>Explora el catálogo</strong><small>Encuentra tu producto y modelo</small></span></div>
+      <div><span class="benefit-number">02</span><span><strong>Revisa la disponibilidad</strong><small>Existencias actualizadas</small></span></div>
+      <div><span class="benefit-number">03</span><span><strong>Consulta directamente</strong><small>Pregunta por lo que necesitas</small></span></div>
+    </div>
+    <div class="catalog-heading" id="catalogo"><div><p class="eyebrow">ENCUENTRA TU PRÓXIMO IMPRESCINDIBLE</p><h2>Nuestro catálogo<span>.</span></h2></div><span class="catalog-note">Elige. Consulta. Equípate.</span></div>
+    <section class="toolbar" aria-label="Filtros">
+      <label class="search-box">
+        <span>Buscar</span>
+        <input id="search" type="search" placeholder="¿Qué buscas para tu moto?" autocomplete="off">
+      </label>
+      <label>
+        <span>Producto</span>
+        <select id="productFilter">
+          <option value="">Todos</option>
+        </select>
+      </label>
+      <label>
+        <span>Orden</span>
+        <select id="sortBy">
+          <option value="name">Nombre</option>
+          <option value="price_asc">Precio menor</option>
+          <option value="price_desc">Precio mayor</option>
+          <option value="stock_desc">Más disponibles</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="summary" aria-live="polite">
+      <strong id="count">0</strong>
+      <span>productos disponibles</span>
+    </section>
+
+    <section class="grid" id="productGrid" aria-live="polite"></section>
+    <section class="empty" id="emptyState" hidden>No hay productos disponibles.</section>
+  </main>
+
+  <footer><img src="assets/logo-racing-bauta.png" alt="Racing-Bauta" width="120" height="59"><p>Pasión por las motos, en cada detalle.</p><a href="#catalogo">Volver al catálogo ↑</a></footer>
+
+  <template id="productTemplate">
+    <article class="product-card">
+      <div class="photo-wrap">
+        <img class="photo" alt="">
+        <div class="photo-fallback"></div>
+      </div>
+      <div class="product-body">
+        <p class="category"></p>
+        <h2></h2>
+        <div class="meta">
+          <span class="price"></span>
+          <span class="stock"></span>
+        </div>
+      </div>
+      <a class="contact" target="_blank" rel="noopener">Consultar producto <span aria-hidden="true">↗</span></a>
+    </article>
+  </template>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
