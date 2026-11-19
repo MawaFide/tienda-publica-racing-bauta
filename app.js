@@ -9,11 +9,17 @@
   const productFilter = document.getElementById("productFilter");
   const sortBy = document.getElementById("sortBy");
   let products = [];
+  let dollarRate = null;
   const money = new Intl.NumberFormat("es-CU", {
-    style: "currency",
-    currency: config.currency || "USD",
-    minimumFractionDigits: 2
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
   });
+  // sale_price is the final CUP price, already including the profit markup.
+  // The administrator app publishes CUP per US dollar to Supabase.
+  function usdPrice(product) {
+    const rate = Number(dollarRate);
+    return Number.isFinite(rate) && rate > 0 ? product.sale_price / rate : null;
+  }
   function setStatus(text) { status.textContent = text; }
   function initials(product) {
     return `${product.product_name || ""} ${product.model_name || ""}`.trim().split(/\s+/).slice(0, 2).map((part) => part.charAt(0).toUpperCase()).join("") || "RB";
@@ -52,7 +58,21 @@
     });
     if (!response.ok) throw new Error(`Supabase respondio ${response.status}`);
     products = (await response.json()).map(normalize);
-    setStatus("Actualizado");
+    // No manual fallback: a missing rate must never create misleading prices.
+    dollarRate = null;
+    try {
+      const rateResponse = await fetch(`${base}/rest/v1/rm_store_settings?select=dollar_rate&singleton=eq.true`, {
+        headers: { apikey: config.supabaseAnonKey }
+      });
+      if (rateResponse.ok) {
+        const rows = await rateResponse.json();
+        const rate = Number(rows[0]?.dollar_rate);
+        if (Number.isFinite(rate) && rate > 0) dollarRate = rate;
+      }
+    } catch (error) {
+      console.warn("No se pudo actualizar la tasa de cambio de la tienda.");
+    }
+    setStatus(dollarRate === null ? "Tasa pendiente" : "Actualizado");
     renderFilters();
     render();
   }
@@ -96,7 +116,14 @@
       const fallback = node.querySelector(".photo-fallback");
       node.querySelector(".category").textContent = product.product_name;
       node.querySelector("h2").textContent = product.model_name;
-      node.querySelector(".price").textContent = money.format(product.sale_price);
+      node.querySelector(".price").textContent = `${money.format(product.sale_price)} CUP`;
+      const usd = usdPrice(product);
+      node.querySelector(".price-usd").textContent = usd === null
+        ? "US: por confirmar"
+        : `${money.format(usd)} US`;
+      node.querySelector(".price-usd").title = usd === null
+        ? "Tasa de cambio pendiente de configurar"
+        : `1 US = ${money.format(Number(dollarRate))} CUP`;
       node.querySelector(".stock").textContent = `${product.quantity} disp.`;
       fallback.textContent = initials(product);
       fallback.hidden = false;
